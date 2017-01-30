@@ -670,7 +670,7 @@ tabutils._tabOpeningOptions = function() {
     [/\S*insertRelatedAfterCurrent\S*(?=\))/, "false"], // replace "getBoolPref("browser.tabs.insertRelatedAfterCurrent")"
     [/(?=(return t;)(?![\s\S]*\1))/, function() {
       if (t.hasAttribute("opener")) {
-        function shouldStack(tab) { let args = tab.arguments; return args.aReferrerURI || args.aRelatedToCurrent && args.aURI != "about:blank"; }
+        function shouldStack(tab) { return true; }
 
         let lastRelatedTab = this.mCurrentTab;
         let isStack = this.isStackedTab(lastRelatedTab);
@@ -697,7 +697,7 @@ tabutils._tabOpeningOptions = function() {
     if ((function() {
       switch (TU_getPref("extensions.tabutils.openTabNext", 1)) {
         case 1: //All
-        case 2: return aRelatedToCurrent || aReferrerURI || (aURI != "about:blank" && aURI != "about:newtab"); //All but New Tab
+        case 2: return aRelatedToCurrent || aReferrerURI || !isBlankPageURL(aURI); //All but New Tab
         case 3: return aRelatedToCurrent == null ? aReferrerURI : aRelatedToCurrent; //None but Links
         default: return false; //None
       }
